@@ -2,3 +2,6 @@
 
 # MacOS
 .DS_Store
+
+# DuckDB plugin
+duckdb-home/.duckdb/extensions/v1.5.4/linux_arm64/*

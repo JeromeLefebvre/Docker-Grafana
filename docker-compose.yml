@@ -22,6 +22,11 @@ services:
       # Read-write because DuckDB opens .db files read-write by default.
       - /Users/jeromelefebvre/GitHub:/Users/jeromelefebvre/GitHub
       - /Users/jeromelefebvre/Weight:/Users/jeromelefebvre/Weight
+
+      # DuckDB home (the plugin hard-codes /tmp/duckdb). Installed
+      # extensions such as httpfs are kept here on the Mac, so they're
+      # downloaded once and survive container rebuilds.
+      - ./duckdb-home:/tmp/duckdb
     extra_hosts:
       # lets dashboards reach services on the Mac (e.g. the 1Password
       # local REST API) via http://host.docker.internal:9000

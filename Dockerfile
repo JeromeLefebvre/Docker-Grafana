@@ -27,13 +27,16 @@ ENV GF_PATHS_PLUGINS=/opt/grafana-plugins
 # Same as [plugins] allow_loading_unsigned_plugins in your grafana.ini
 ENV GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=motherduck-duckdb-datasource
 
-# DuckDB caches extensions (icu, httpfs, ...) under $HOME/.duckdb;
-# point it at the persistent data dir so they survive restarts.
-ENV HOME=/var/lib/grafana \
-    TZ=Australia/Perth
+ENV TZ=Australia/Perth
 
+# The DuckDB plugin runs `SET home_directory='/tmp/duckdb'` itself and
+# DuckDB stores installed extensions (httpfs, icu, ...) there. The folder
+# must exist and be writable by the grafana user (uid 472), otherwise:
+#   "IO Error: Can't find the home directory at '/tmp/duckdb'"
+# docker-compose.yml also mounts it from the Mac so extensions persist.
 USER root
-RUN mkdir -p /opt/grafana-plugins && chown -R 472:0 /opt/grafana-plugins
+RUN mkdir -p /opt/grafana-plugins /tmp/duckdb \
+ && chown -R 472:0 /opt/grafana-plugins /tmp/duckdb
 COPY --from=duckdb-plugin --chown=472:0 /plugins/motherduck-duckdb-datasource /opt/grafana-plugins/motherduck-duckdb-datasource
 USER 472
 
