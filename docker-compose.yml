@@ -1,0 +1,28 @@
+services:
+  grafana:
+    build:
+      context: .
+      args:
+        GRAFANA_VERSION: "13.2.2"        # match or exceed `brew list --versions grafana`
+        DUCKDB_PLUGIN_VERSION: "0.4.5"   # same version you run today
+    image: local/grafana-duckdb:latest
+    container_name: grafana
+    platform: linux/arm64                # M2 Mac
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Grafana state migrated from /opt/homebrew/var/lib/grafana
+      # (grafana.db = dashboards, datasources, users, alerting)
+      - ./grafana-data:/var/lib/grafana
+
+      # Your DuckDB files and CSVs. Mounted at the SAME absolute path as on
+      # the Mac, so every datasource path / read_csv() path keeps working
+      # unchanged, e.g. /Users/jeromelefebvre/GitHub/DuckDB-HAE/hae.db
+      # Read-write because DuckDB opens .db files read-write by default.
+      - /Users/jeromelefebvre/GitHub:/Users/jeromelefebvre/GitHub
+      - /Users/jeromelefebvre/Weight:/Users/jeromelefebvre/Weight
+    extra_hosts:
+      # lets dashboards reach services on the Mac (e.g. the 1Password
+      # local REST API) via http://host.docker.internal:9000
+      - "host.docker.internal:host-gateway"
