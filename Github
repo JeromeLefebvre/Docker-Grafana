@@ -1,0 +1,62 @@
+# .github/workflows/docker-vuln-scan.yml
+name: Docker vulnerability scan
+
+on:
+  push:
+    branches: [main]
+    paths: ["Dockerfile", ".github/workflows/docker-vuln-scan.yml"]
+  pull_request:
+    paths: ["Dockerfile"]
+  schedule:
+    - cron: "0 22 * * *"   # daily — new CVEs appear even if your Dockerfile doesn't change
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write   # needed to upload results to the Security tab
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1) Lint the Dockerfile itself (misconfigurations: running as root, no USER, etc.)
+      - name: Scan Dockerfile config
+        uses: aquasecurity/trivy-action@v0.36.0   # tip: pin to the commit SHA instead of the tag
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+
+      # 2) Build the image so every stage's contents (base images, apk packages,
+      #    Grafana, the DuckDB plugin binary) can be scanned
+      - name: Build image
+        run: docker build -t local/grafana-duckdb:${{ github.sha }} .
+
+      # 3) Scan the built image for known CVEs and upload to GitHub Security
+      - name: Scan image (SARIF)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: local/grafana-duckdb:${{ github.sha }}
+          format: sarif
+          output: trivy-image.sarif
+          severity: MEDIUM,HIGH,CRITICAL
+          ignore-unfixed: true
+
+      - name: Upload to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-image.sarif
+
+      # 4) Fail the build on fixable HIGH/CRITICAL vulns
+      - name: Fail on HIGH/CRITICAL
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: local/grafana-duckdb:${{ github.sha }}
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
