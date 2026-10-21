@@ -2,17 +2,15 @@ services:
   grafana:
     build:
       context: .
-      args:
-        GRAFANA_VERSION: "13.2.2"        # match or exceed `brew list --versions grafana`
-        DUCKDB_PLUGIN_VERSION: "0.4.5"   # same version you run today
     image: local/grafana-duckdb:latest
     container_name: grafana
-    platform: linux/arm64                # M2 Mac
-    restart: unless-stopped
+    platform: linux/arm64
+    restart: unless-stopped # this will keep it running in docker
+    environment:
+      - GF_LOG_LEVEL=warn
     ports:
       - "3000:3000"
     volumes:
-      # Grafana state migrated from /opt/homebrew/var/lib/grafana
       # (grafana.db = dashboards, datasources, users, alerting)
       - ./grafana-data:/var/lib/grafana
 
@@ -20,8 +18,9 @@ services:
       # the Mac, so every datasource path / read_csv() path keeps working
       # unchanged, e.g. /Users/jeromelefebvre/GitHub/DuckDB-HAE/hae.db
       # Read-write because DuckDB opens .db files read-write by default.
-      - /Users/jeromelefebvre/GitHub:/Users/jeromelefebvre/GitHub
-      - /Users/jeromelefebvre/Weight:/Users/jeromelefebvre/Weight
+      # host_path:container_path
+      - ~/GitHub:/Data/GitHub
+      - ~/Weight:/Users/jeromelefebvre/Weight
 
       # DuckDB home (the plugin hard-codes /tmp/duckdb). Installed
       # extensions such as httpfs are kept here on the Mac, so they're
