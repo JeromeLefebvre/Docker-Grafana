@@ -1,7 +1,7 @@
 # Grafana + MotherDuck DuckDB datasource
 
-ARG GRAFANA_VERSION=13.2.2
-ARG DUCKDB_PLUGIN_VERSION=0.4.5
+ARG GRAFANA_VERSION=13.2.4
+ARG DUCKDB_PLUGIN_VERSION=0.4.6
 
 # ---------- stage 1: fetch the DuckDB plugin ----------
 FROM alpine:3.20 AS duckdb-plugin
@@ -37,6 +37,7 @@ ENV TZ=Australia/Perth
 USER root
 RUN mkdir -p /opt/grafana-plugins /tmp/duckdb \
  && chown -R 472:0 /opt/grafana-plugins /tmp/duckdb
+ENV HOME=/tmp/duckdb
 COPY --from=duckdb-plugin --chown=472:0 /plugins/motherduck-duckdb-datasource /opt/grafana-plugins/motherduck-duckdb-datasource
 USER 472
 

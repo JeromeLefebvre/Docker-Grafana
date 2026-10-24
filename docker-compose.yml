@@ -19,8 +19,8 @@ services:
       # unchanged, e.g. /Users/jeromelefebvre/GitHub/DuckDB-HAE/hae.db
       # Read-write because DuckDB opens .db files read-write by default.
       # host_path:container_path
-      - ~/GitHub:/Data/GitHub
-      - ~/Weight:/Users/jeromelefebvre/Weight
+      - /Users/jeromelefebvre/GitHub:/Users/jeromelefebvre/GitHub
+      - /Users/jeromelefebvre/Weight:/Users/jeromelefebvre/Weight
 
       # DuckDB home (the plugin hard-codes /tmp/duckdb). Installed
       # extensions such as httpfs are kept here on the Mac, so they're
