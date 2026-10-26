@@ -1,13 +1,11 @@
-
-
 # MacOS
 .DS_Store
 
-# DuckDB plugin
+# DuckDB plugin, these are rebuilt
 duckdb-home/
 
 # Grafana DB
 grafana-data/
 
-# Dockerfile
+# Dockerfile, contains internal paths
 .env
