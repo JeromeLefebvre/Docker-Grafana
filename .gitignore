@@ -8,3 +8,6 @@ duckdb-home/
 
 # Grafana DB
 grafana-data/
+
+# Dockerfile
+.env

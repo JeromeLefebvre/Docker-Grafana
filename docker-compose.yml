@@ -8,6 +8,8 @@ services:
     restart: unless-stopped # this will keep it running in docker
     environment:
       - GF_LOG_LEVEL=warn
+      - GITHUB_DIR=${GITHUB_DIR}
+      - WEIGHT_DIR=${WEIGHT_DIR}
     ports:
       - "3000:3000"
     volumes:
@@ -17,10 +19,9 @@ services:
       # Your DuckDB files and CSVs. Mounted at the SAME absolute path as on
       # the Mac, so every datasource path / read_csv() path keeps working
       # unchanged, e.g. /Users/jeromelefebvre/GitHub/DuckDB-HAE/hae.db
-      # Read-write because DuckDB opens .db files read-write by default.
-      # host_path:container_path
-      - /Users/jeromelefebvre/GitHub:/Users/jeromelefebvre/GitHub
-      - /Users/jeromelefebvre/Weight:/Users/jeromelefebvre/Weight
+      # We need rw as the dasbhboards need to do slight updates to the DuckDB files
+      - ${GITHUB_DIR}:${GITHUB_DIR}:rw
+      - ${WEIGHT_DIR}:${WEIGHT_DIR}:rw
 
       # DuckDB home (the plugin hard-codes /tmp/duckdb). Installed
       # extensions such as httpfs are kept here on the Mac, so they're
