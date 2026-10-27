@@ -18,6 +18,10 @@ RUN apk add --no-cache curl unzip \
 # ---------- stage 2: Grafana (Ubuntu image: the plugin needs glibc, Alpine/musl won't work) ----------
 FROM grafana/grafana:${GRAFANA_VERSION}-ubuntu
 
+# Disable some plugins that are not needed and could be vulnerable.
+ENV GF_PLUGINS_DISABLE_PLUGINS=grafana-mysql-datasource,grafana-loki-datasource,
+
+ENV GF_SERVER_ENABLE_GZIP=false
 # Keep plugins inside the image (outside /var/lib/grafana) so the data
 # bind-mount can't hide them. Grafana's own auto-installed plugins land here too.
 ENV GF_PATHS_PLUGINS=/opt/grafana-plugins
@@ -37,6 +41,9 @@ ENV TZ=Australia/Perth
 USER root
 RUN mkdir -p /opt/grafana-plugins /tmp/duckdb \
  && chown -R 472:0 /opt/grafana-plugins /tmp/duckdb
+# mysql is bundled with Grafana but we don't need it, so remove it to reduce the image size and attack surface.
+RUN rm -rf /usr/share/grafana/data/plugins-bundled/mysql/
+RUN rm -rf /usr/share/grafana/data/plugins-bundled/loki/
 ENV HOME=/tmp/duckdb
 COPY --from=duckdb-plugin --chown=472:0 /plugins/motherduck-duckdb-datasource /opt/grafana-plugins/motherduck-duckdb-datasource
 USER 472
