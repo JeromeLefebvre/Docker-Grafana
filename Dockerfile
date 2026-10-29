@@ -1,6 +1,6 @@
 # Grafana + MotherDuck DuckDB datasource
 
-ARG GRAFANA_VERSION=13.2.4
+ARG GRAFANA_VERSION=13.3.0
 ARG DUCKDB_PLUGIN_VERSION=0.4.6
 
 # ---------- stage 1: fetch the DuckDB plugin ----------
