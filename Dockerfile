@@ -19,7 +19,7 @@ RUN apk add --no-cache curl unzip \
 FROM grafana/grafana:${GRAFANA_VERSION}-ubuntu
 
 # Disable some plugins that are not needed and could be vulnerable.
-ENV GF_PLUGINS_DISABLE_PLUGINS=grafana-mysql-datasource,grafana-loki-datasource,influxdb,mssql,opentsdb,zipkin,tempo,stackdriver,prometheus,jaeger,grafana-pyroscope-datasource
+ENV GF_PLUGINS_DISABLE_PLUGINS=grafana-mysql-datasource,grafana-loki-datasource,influxdb,mssql,opentsdb,zipkin,tempo,stackdriver,prometheus,jaeger,grafana-pyroscope-datasource,cloudwatch
 
 ENV GF_SERVER_ENABLE_GZIP=false
 # Keep plugins inside the image (outside /var/lib/grafana) so the data
@@ -59,12 +59,14 @@ RUN rm -rf /usr/share/grafana/data/plugins-bundled/prometheus \
            /opt/grafana-plugins/prometheus    
 RUN rm -rf /usr/share/grafana/data/plugins-bundled/jaeger \
            /opt/grafana-plugins/jaeger    
-RUN rm -rf /usr/share/grafana/data/plugins-bundled/jaeger \
-           /opt/grafana-plugins/jaeger    
-RUN rm -rf /usr/share/grafana/data/plugins-bundled/pyroscope \
-           /opt/grafana-plugins/pyroscope    
+RUN rm -rf /usr/share/grafana/data/plugins-bundled/grafana-pyroscope-datasource \
+           /opt/grafana-plugins/grafana-pyroscope-datasource
 RUN rm -rf /usr/share/grafana/data/plugins-bundled/motherduck-duckdb-datasource/gpx_duckdb_datasource_linux_amd64 \
            /opt/grafana-plugins/motherduck-duckdb-datasource/gpx_duckdb_datasource_linux_amd64
+RUN rm -rf /usr/share/grafana/data/plugins-bundled/cloudwatch \
+           /opt/grafana-plugins/cloudwatch   
+
+
 
 ENV HOME=/tmp/duckdb
 COPY --from=duckdb-plugin --chown=472:0 /plugins/motherduck-duckdb-datasource /opt/grafana-plugins/motherduck-duckdb-datasource
