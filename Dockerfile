@@ -21,6 +21,9 @@ FROM grafana/grafana:${GRAFANA_VERSION}-ubuntu
 # Disable some plugins that are not needed and could be vulnerable.
 ENV GF_PLUGINS_DISABLE_PLUGINS=grafana-mysql-datasource,grafana-loki-datasource,influxdb,mssql,opentsdb,zipkin,tempo,stackdriver,prometheus,jaeger,grafana-pyroscope-datasource,cloudwatch
 
+# 言語の設定
+ENV GF_USERS_DEFAULT_LANGUAGE=ja-JP
+
 ENV GF_SERVER_ENABLE_GZIP=false
 # Keep plugins inside the image (outside /var/lib/grafana) so the data
 # bind-mount can't hide them. Grafana's own auto-installed plugins land here too.
