@@ -26,6 +26,7 @@ jobs:
       - name: Scan Dockerfile config
         uses: aquasecurity/trivy-action@v0.36.0   # tip: pin to the commit SHA instead of the tag
         with:
+          version: v0.76.1
           scan-type: config
           scan-ref: .
           severity: HIGH,CRITICAL
@@ -40,6 +41,7 @@ jobs:
       - name: Scan image (SARIF)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          version: v0.76.1
           image-ref: local/grafana-duckdb:${{ github.sha }}
           format: sarif
           output: trivy-image.sarif
@@ -56,6 +58,7 @@ jobs:
       - name: Fail on HIGH/CRITICAL
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          version: v0.76.1
           image-ref: local/grafana-duckdb:${{ github.sha }}
           format: table
           severity: HIGH,CRITICAL
