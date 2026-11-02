@@ -11,7 +11,7 @@ services:
       - GITHUB_DIR=${GITHUB_DIR}
       - WEIGHT_DIR=${WEIGHT_DIR}
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     volumes:
       # (grafana.db = dashboards, datasources, users, alerting)
       - ./grafana-data:/var/lib/grafana

@@ -1,0 +1,6 @@
+vulnerabilities:
+  - id: CVE-2026-84445
+    purls:
+      - "pkg:golang/google.golang.org/grpc@v1.83.1"
+    expired_at: 2027-03-01
+    statement: "Denial of Service (DoS) vulnerability are not a worry for my local deployment of Grafana"
