@@ -47,6 +47,7 @@ jobs:
           output: trivy-image.sarif
           severity: MEDIUM,HIGH,CRITICAL
           ignore-unfixed: true
+          trivyignores: .trivyignore.yaml
 
       - name: Upload to GitHub Security tab
         if: always()
