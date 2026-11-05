@@ -16,3 +16,6 @@ vulnerabilities:
   - id:  CVE-2026-97031
     expired_at: 2027-03-01
     statement: "Denial of Service (DoS) vulnerability are not a worry for my local deployment of Grafana"
+  - id:  CVE-2026-63209
+    expired_at: 2027-03-01
+    statement: "Denial of Service (DoS) vulnerability are not a worry for my local deployment of Grafana"
