@@ -25,3 +25,6 @@ vulnerabilities:
   - id: CVE-2026-109518
     expired_at: 2027-03-01
     statement: "While the vulnerable apt is installed, it is never used during the build of the process of the Grafana image, thus not a worry"
+  - id: CVE-2026-111943
+    expired_at: 2027-03-01
+    statement: "My implemention of grafana does not rely on third party certificates, thus this vulnerability is not a worry for my local deployment of Grafana"
