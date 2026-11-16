@@ -28,3 +28,8 @@ vulnerabilities:
   - id: CVE-2026-111943
     expired_at: 2027-03-01
     statement: "My implemention of grafana does not rely on third party certificates, thus this vulnerability is not a worry for my local deployment of Grafana"
+  - id: CVE-2026-56854
+    expired_at: 2027-03-01
+    statement: "My localhost deployment does not expose Grafana externally, thus this vulnerability is not a worry for my local deployment of Grafana"
+
+
